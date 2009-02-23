@@ -24,6 +24,8 @@ sub create_task_package{
 	my $task_class_name  = $manager->args->[1];
 	my $task_description = $manager->args->[2];
 
+	die "invalid task name ".$task_name if($task_name =~ /[^a-z0-9_]/);
+	die "invalid task class name ". $task_class_name if($task_class_name =~ /[^a-zA-Z0-9]/);
 	die "already exist task" if(exists $manager->tasks->{$task_name});
 			
 
@@ -39,14 +41,43 @@ sub create_task_package{
 
 =head1 FUNCTIONS
 
+=head2 pre_execute
+
+pre execute task
+
+=cut
+
+sub pre_execute{
+	my $self = shift;	
+	my $manager = shift;
+	# pre task implement here;
+}
+
 =head2 execute
+
+execute task
 
 =cut
 
 sub execute{
 	my $self = shift;	
+	my $manager = shift;
+	# task implement here;
 	print "TODO: implement task here\n";
 }
+
+=head2 post_execute
+
+post execute task
+
+=cut
+
+sub post_execute{
+	my $self = shift;	
+	my $manager = shift;
+	# post task implement here;
+}
+
 
 1;
 __END_SCRIPT__

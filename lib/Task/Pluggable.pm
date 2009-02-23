@@ -7,15 +7,15 @@ __PACKAGE__->mk_classdata('task_manager');
 
 =head1 NAME
 
-Task::Pluggable - The great new Task::Pluggable!
+Task::Pluggable - Pluggable task module
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 SYNOPSIS
@@ -52,7 +52,7 @@ create task directory and task script
 =cut
 sub create {
 	my $self  = shift;
-	my $command_line = Task::Pluggable::CommandLineTaskManager->get_instance();
+	my $command_line = Task::Pluggable::CommandLineTaskManager->new();
 	$command_line->task_name('create_task_env');
 	$command_line->do_task();
 }

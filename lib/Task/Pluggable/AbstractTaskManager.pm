@@ -3,20 +3,13 @@ use strict;
 use warnings;
 use Task::Pluggable::PluginManager;
 use base qw(Class::Data::Inheritable Class::Accessor);
-__PACKAGE__->mk_accessors(qw/tasks args task_name/);
-my $_instance;
-
-sub get_instance{
-	my $class = shift;
-	unless(defined $_instance){
-		$_instance = new $class;
-	}	
-	return $_instance;
-}
+__PACKAGE__->mk_accessors(qw/config tasks args task_name/);
 
 sub new{
 	my $class = shift;
+	my $config = shift;
 	my $self = $class->SUPER::new();
+	$self->config($config);
 	$self->init();
 	return $self;
 }
@@ -44,9 +37,15 @@ sub do_task{
 	eval{
 		die "task not exist" unless($self->task_name());
 		die "task not exist" unless(exists $self->tasks->{$self->task_name()});
+		print 'Task '.$self->task_name.'start'."\n";
+		print '-----------------------------------------------------------------------'."\n";
+		print 'Pre task excute'."\n";
 		$self->tasks->{$self->task_name()}->pre_execute($self);	
+		print 'Task excute'."\n";
 		$self->tasks->{$self->task_name()}->execute($self);	
+		print 'Post task excute'."\n";
 		$self->tasks->{$self->task_name()}->post_execute($self);	
+		print 'Task finished'."\n";
 	};
 	if($@){
 		print '-----------------------------------------------------------------------'."\n";
@@ -58,29 +57,6 @@ sub do_task{
 
 sub help{
 	my $self = shift;
-print <<__END_HELP_HEADER__;
-Perl Task Manager
-usage:
-  ptm <task_name> <arg0> <arg1> ..
- 
-tasklist:
-
-__END_HELP_HEADER__
-	foreach my $task_name (sort{ $a cmp $b } keys %{$self->tasks}){
-		print '  ';
-		printf('%-15s',$task_name);
-		print '  ';
-		print $self->tasks()->{$task_name}->task_description()."\n";
-		if($self->tasks()->{$task_name}->task_args_description()){
-			printf('  %-15s  ','');
-			print sprintf('%-15s',$self->tasks()->{$task_name}->task_args_description())."\n";
-		}
-	}
-
-print <<__END_HELP_FOOTER__;
-
-__END_HELP_FOOTER__
-
 }
 
 
